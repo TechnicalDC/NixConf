@@ -81,6 +81,7 @@
   environment.systemPackages = with pkgs; [
 	arandr
 	bat
+	betterlockscreen
 	btop
 	dunst
 	feh
@@ -90,9 +91,11 @@
 	git
 	glow
 	gum
+	home-manager
 	instaloader
 	killall
 	lf
+	lxappearance
 	mpc-cli
 	mpd
 	mpv
