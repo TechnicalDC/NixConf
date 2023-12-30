@@ -15,7 +15,7 @@
   boot.loader.grub.device = "/dev/sda";
   boot.loader.grub.useOSProber = true;
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking.hostName = "TechnicalDC"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
@@ -79,26 +79,48 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-	wget
-	gum
-	neofetch
-	lf
-	fzf
-	bat
-	nodejs_20
-	neovim
-	wezterm
-	firefox
-	rofi
-	pywal
-	newsboat
-	telegram-desktop
 	arandr
+	bat
+	btop
+	dunst
 	feh
+	firefox
+	fishPlugins.fzf
+	fzf
 	git
-	polybar
+	glow
+	gum
+	instaloader
+	killall
+	lf
+	mpc-cli
+	mpd
+	mpv
+	mpvc
+	ncdu_1
+	ncmpcpp
+	neofetch
+	neovim
+	newsboat
+	nodejs_20
+	polybarFull
+	python311Packages.pip
+	pywal
+	rofi
+	starship
+	telegram-desktop
+	tldr
+	wezterm
+	wget
+	zathura
+	zoxide
   ];
+  environment.shellAliases = {
+	ll = "ls -l";
+  };
+  environment.sessionVariables = {
+	FZF_DEFAULT_OPTS = "--height 40% --layout=reverse --border";
+  };
 
   fonts.packages = with pkgs; [
   noto-fonts
@@ -115,6 +137,10 @@
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions
+  programs.starship = {
+  	enable = true;
+	interactiveOnly = true;
+  };
   programs.fish = {
   	enable = true;
   };
@@ -129,10 +155,14 @@
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
   services.picom.enable = true;
+  services.locate = {
+  	enable = true;
+  	interval = "hourly";
+  };
   services.mpd = {
 	enable = true;
 	user = "dilip";
-	group = "dilip";
+	group = "users";
 	dbFile = "/home/dilip/.config/mpd/mpd.db";
 	musicDirectory	= "/home/dilip/Music";
 	playlistDirectory = "/home/dilip/Music/Playlist";
