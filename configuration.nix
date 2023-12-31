@@ -25,6 +25,11 @@
   # Enable networking
   networking.networkmanager.enable = true;
 
+  sound.enable = true;
+  hardware.pulseaudio.enable = true;
+  hardware.opengl.driSupport32Bit = true;
+  hardware.pulseaudio.support32Bit = true;
+
   # Set your time zone.
   time.timeZone = "Asia/Kolkata";
 
@@ -52,6 +57,10 @@
       sddm = {
 	enable = true;
       };
+      setupCommands = ''
+	      ${pkgs.xorg.xrandr}/bin/xrandr --output Virtual1 --mode 1920x1080 --pos 0x0 --rotate normal
+      '';
+
     };
   };
   services.xserver.windowManager = {
@@ -69,12 +78,19 @@
   users.users.dilip = {
     isNormalUser = true;
     description = "dilip";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "audio" ];
     packages = with pkgs; [];
   };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+  documentation.nixos.enable = false; # .desktop
+  nix = {
+    settings = {
+      experimental-features = "nix-command flakes";
+      auto-optimise-store = true;
+    };
+  };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -83,15 +99,20 @@
 	bat
 	betterlockscreen
 	btop
+	conky
 	dunst
 	feh
 	firefox
 	fishPlugins.fzf
 	fzf
+	gh
+	gimp-with-plugins
 	git
 	glow
+	gnugrep
 	gum
 	home-manager
+	hugo
 	instaloader
 	killall
 	lf
@@ -106,40 +127,46 @@
 	neovim
 	newsboat
 	nodejs_20
+	polkit_gnome
 	polybarFull
 	python311Packages.pip
 	pywal
+	ripgrep
 	rofi
 	starship
 	telegram-desktop
 	tldr
+	trash-cli
 	wezterm
 	wget
+	xclip
 	zathura
 	zoxide
   ];
   environment.shellAliases = {
 	ll = "ls -l";
+	btop = "btop --utf-force";
   };
   environment.sessionVariables = {
 	FZF_DEFAULT_OPTS = "--height 40% --layout=reverse --border";
   };
 
   fonts.packages = with pkgs; [
-  noto-fonts
-  noto-fonts-cjk
-  noto-fonts-emoji
-  liberation_ttf
-  fira-code
-  fira-code-symbols
-  nerdfonts
-  mplus-outline-fonts.githubRelease
-  dina-font
-  proggyfonts
-];
+	noto-fonts
+	noto-fonts-cjk
+	noto-fonts-emoji
+	liberation_ttf
+	fira-code
+	fira-code-symbols
+	nerdfonts
+	mplus-outline-fonts.githubRelease
+	dina-font
+	proggyfonts
+  ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions
+  programs.kdeconnect.enable = true;
   programs.starship = {
   	enable = true;
 	interactiveOnly = true;
@@ -152,8 +179,6 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-
-  # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
@@ -177,12 +202,6 @@
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.11"; # Did you read the comment?
 
 }
