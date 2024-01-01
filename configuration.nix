@@ -56,6 +56,7 @@
     displayManager = {
       sddm = {
 	enable = true;
+	theme = "${import ./sddm.nix { inherit pkgs; }}";
       };
       setupCommands = ''
 	      ${pkgs.xorg.xrandr}/bin/xrandr --output Virtual1 --mode 1920x1080 --pos 0x0 --rotate normal
@@ -107,7 +108,7 @@
 	fzf
 	gh
 	gimp-with-plugins
-	git
+	# git
 	glow
 	gnugrep
 	gum
@@ -116,7 +117,11 @@
 	instaloader
 	killall
 	lf
+	libgcc
+	libsForQt5.qt5.qtquickcontrols
+	libsForQt5.qt5.qtgraphicaleffects
 	lxappearance
+	maim
 	mpc-cli
 	mpd
 	mpv
@@ -182,7 +187,7 @@
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
-  services.picom.enable = true;
+  # services.picom.enable = true;
   services.locate = {
   	enable = true;
   	interval = "hourly";
