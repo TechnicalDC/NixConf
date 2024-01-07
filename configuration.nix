@@ -14,6 +14,9 @@
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/sda";
   boot.loader.grub.useOSProber = true;
+  boot.plymouth.enable = true;
+  boot.plymouth.themePackages = [ pkgs.adi1090x-plymouth-themes ];
+  boot.plymouth.theme = "angular";
 
   networking.hostName = "TechnicalDC"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -53,7 +56,13 @@
     enable = true;
     layout = "us";
     xkbVariant = "";
+    desktopManager.xterm.enable = false;
     displayManager = {
+      defaultSession = "none+bspwm";
+      autoLogin = {
+	enable = true;
+	user = "dilip";
+      };
       sddm = {
 	enable = true;
 	theme = "${import ./sddm.nix { inherit pkgs; }}";
@@ -101,14 +110,13 @@
 	betterlockscreen
 	btop
 	conky
-	dunst
+	# dunst
 	feh
 	firefox
 	fishPlugins.fzf
-	fzf
+	# fzf
 	gh
 	gimp-with-plugins
-	# git
 	glow
 	gnugrep
 	gum
@@ -120,6 +128,7 @@
 	libgcc
 	libsForQt5.qt5.qtquickcontrols
 	libsForQt5.qt5.qtgraphicaleffects
+	libnotify
 	lxappearance
 	maim
 	mpc-cli
@@ -130,6 +139,7 @@
 	ncmpcpp
 	neofetch
 	neovim
+	nsxiv
 	newsboat
 	nodejs_20
 	polkit_gnome
@@ -138,15 +148,15 @@
 	pywal
 	ripgrep
 	rofi
-	starship
+	# starship
 	telegram-desktop
 	tldr
 	trash-cli
 	wezterm
 	wget
 	xclip
-	zathura
-	zoxide
+	# zathura
+	# zoxide
   ];
   environment.shellAliases = {
 	ll = "ls -l";
@@ -172,13 +182,6 @@
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions
   programs.kdeconnect.enable = true;
-  programs.starship = {
-  	enable = true;
-	interactiveOnly = true;
-  };
-  programs.fish = {
-  	enable = true;
-  };
   # programs.mtr.enable = true;
   # programs.gnupg.agent = {
   #   enable = true;
@@ -199,6 +202,17 @@
 	dbFile = "/home/dilip/.config/mpd/mpd.db";
 	musicDirectory	= "/home/dilip/Music";
 	playlistDirectory = "/home/dilip/Music/Playlist";
+  	 network = {
+		listenAddress = "127.0.0.1";
+		port = 6600;
+	 };
+	 extraConfig = ''
+		 audio_output {
+			 type "pulse"
+			 name "My PulseAudio" # this can be whatever you want
+		 }
+	 '';
+
   };
 
   # Open ports in the firewall.
