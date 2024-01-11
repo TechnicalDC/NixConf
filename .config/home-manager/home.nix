@@ -13,6 +13,7 @@
   home.username = "dilip";
   home.homeDirectory = "/home/dilip";
   xdg.enable = true;
+  xdg.configFile."lf/icons".source = ./icons;
   home.pointerCursor = {
 	 name = "Bibata-Modern-Ice";
 	 package = pkgs.bibata-cursors;
@@ -53,7 +54,6 @@
 
   home.sessionVariables = {
     EDITOR = "nvim";
-	 FZF_DEFAULT_OPTS = "--height 40% --layout=reverse --border";
   };
   home.shellAliases = {
 	btop = "btop --utf-force";
@@ -83,6 +83,22 @@
 	 '';
   };
 
+  programs.eza = {
+	 enable = true;
+	 enableAliases = true;
+	 git = true;
+	 icons = true;
+  };
+  programs.fzf = {
+    enable = true;
+	 enableFishIntegration = true;
+	 colors = {};
+	 defaultOptions = [
+		"--height 40%" 
+		"--layout=reverse"
+		"--border"
+	 ];
+  };
   programs.git = {
 	 enable = true;
 	 userName = "Dilip Chauhan";
@@ -90,6 +106,32 @@
   };
   programs.fish = {
 	enable = true;
+  };
+  programs.lf = {
+	 enable = true;
+	 settings = {
+      preview = true;
+      hidden = false;
+      drawbox = true;
+      icons = true;
+      ignorecase = true;
+    };
+	 commands = {
+      editor-open = ''$$EDITOR $f'';
+      mkdir = ''
+      ''${{
+		   clear
+			mkdir $(gum input --prompt="Directory Name: ")
+      }}
+      '';
+    };
+	 keybindings = {
+      # "\\\"" = "";
+      o = "";
+      c = "mkdir";
+      "." = "set hidden!";
+      "<enter>" = "open";
+    };
   };
   programs.zoxide = {
     enable = true;
@@ -194,7 +236,7 @@
 			padding = 15;
 			horizontal_padding = 10;
 			frame_width = 2;
-			font = "Iosevka Nerd Font 9";
+			font = "Iosevka Nerd Font 10";
 			line_height = "1.2";
 			sort = true;
 			markup = "yes";
