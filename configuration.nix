@@ -11,12 +11,16 @@
     ];
 
   # Bootloader.
-  boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
-  boot.loader.grub.useOSProber = true;
+  boot.loader.grub = {
+  	enable = true;
+	device = "/dev/sda";
+	useOSProber = true;
+	theme = pkgs.nixos-grub2-theme;
+  };
   boot.plymouth.enable = true;
   boot.plymouth.themePackages = [ pkgs.adi1090x-plymouth-themes ];
   boot.plymouth.theme = "angular";
+  boot.tmp.cleanOnBoot = true;
 
   networking.hostName = "TechnicalDC"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -76,6 +80,10 @@
   services.xserver.windowManager = {
 	qtile = {
 		enable = true;
+		configFile = "/home/dilip/.config/qtile/config.py";
+		# extraPackages = with pkgs.python311Packages; [
+		# 	qtile-extras
+		# ];
 	};
   	bspwm = {
 		enable = true;
@@ -107,15 +115,13 @@
   environment.systemPackages = with pkgs; [
 	arandr
 	bat
-	betterlockscreen
 	btop
-	conky
-	# dunst
+	# conky
+	fd
 	feh
-	firefox
+	file
 	fishPlugins.fzf
-	# fzf
-	gh
+	# gh
 	gimp-with-plugins
 	glow
 	gnugrep
@@ -123,16 +129,15 @@
 	home-manager
 	hugo
 	instaloader
+	jq
 	killall
-	lf
-	libgcc
+	libgccjit
 	libsForQt5.qt5.qtquickcontrols
 	libsForQt5.qt5.qtgraphicaleffects
 	libnotify
 	lxappearance
 	maim
 	mpc-cli
-	mpd
 	mpv
 	mpvc
 	ncdu_1
@@ -140,23 +145,24 @@
 	neofetch
 	neovim
 	nsxiv
-	newsboat
+	# newsboat
 	nodejs_20
+	# pinentry
+	# pinentry-rofi
 	polkit_gnome
 	polybarFull
 	python311Packages.pip
 	pywal
 	ripgrep
 	rofi
-	# starship
 	telegram-desktop
+	texlive.combined.scheme-full
 	tldr
 	trash-cli
 	wezterm
 	wget
+	whatsapp-for-linux
 	xclip
-	# zathura
-	# zoxide
   ];
   environment.shellAliases = {
 	ll = "ls -l";
@@ -180,7 +186,7 @@
   ];
 
    xdg.portal = {
-       enable = true;
+       enable = false;
        # wlr.enable = true;
        # gtk portal needed to make gtk apps happy
        extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
@@ -190,10 +196,10 @@
   # started in user sessions
   programs.kdeconnect.enable = true;
   # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
+  programs.gnupg.agent = {
+    enable = true;
   #   enableSSHSupport = true;
-  # };
+  };
 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
@@ -202,25 +208,25 @@
   	enable = true;
   	interval = "hourly";
   };
-  services.mpd = {
-	enable = true;
-	user = "dilip";
-	group = "users";
-	dbFile = "/home/dilip/.config/mpd/mpd.db";
-	musicDirectory	= "/home/dilip/Music";
-	playlistDirectory = "/home/dilip/Music/Playlist";
-  	 network = {
-		listenAddress = "127.0.0.1";
-		port = 6600;
-	 };
-	 extraConfig = ''
-		 audio_output {
-			 type "pulse"
-			 name "My PulseAudio" # this can be whatever you want
-		 }
-	 '';
+  #services.mpd = {
+  #      enable = true;
+  #      user = "dilip";
+  #      group = "users";
+  #      dbFile = "/home/dilip/.config/mpd/mpd.db";
+  #      musicDirectory	= "/home/dilip/Music";
+  #      playlistDirectory = "/home/dilip/Music/Playlist";
+  #	 network = {
+  #      	listenAddress = "127.0.0.1";
+  #      	port = 6600;
+  #       };
+  #       extraConfig = ''
+  #      	 audio_output {
+  #      		 type "pulse"
+  #      		 name "My PulseAudio" # this can be whatever you want
+  #      	 }
+  #       '';
 
-  };
+  #};
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
