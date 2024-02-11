@@ -72,6 +72,7 @@
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
   # plain files is through 'home.file'.
   home.file = {
+		".local/share/emoji".source = ./emoji;
     # ".screenrc".source = dotfiles/screenrc;
   };
 
@@ -293,8 +294,6 @@
 				rules = [
 				{ mime = "text/*"; use = "text"; }
 				{ mime = "image/*"; use = "image"; }
-
-				# { mime = "application/json", use = "text" }
 				{ name = "*.json"; use = "text"; }
 
 				# Multiple openers for a single rule
@@ -302,12 +301,17 @@
 				];
 			};
 			opener = {
-			 #  text = [
-				#   { exec = 'nvim "$@"'; block = true; }
-				# ];
+			  text = [
+				{ exec ="nvim $@"; block = true; }
+				];
 			};
 		};
-		theme = {};
+		theme = {
+			status = {
+				separator_open  = "";
+				separator_close = "";
+			};
+		};
 		keymap = {
 			# input.keymap = [
 			# 	{ exec = "close"; on = [ "<c-q>" ]; }
@@ -315,11 +319,147 @@
 			# 	{ exec = "escape"; on = [ "<esc>" ]; }
 			# 	{ exec = "backspace"; on = [ "<backspace>" ]; }
 			# ];
-			# manager.keymap = [
-			# 	{ exec = "escape"; on = [ "<esc>" ]; }
-			# 	{ exec = "quit"; on = [ "q" ]; }
-			# 	{ exec = "close"; on = [ "<c-q>" ]; }
-			# ];
+			manager.keymap = [
+				{ exec = "escape"; on = [ "</esc>" ]; }
+				{ exec = "quit"; on = [ "q" ]; }
+			  { exec = "open"; on = [ "<enter>" ]; }
+# Navigatio
+	{ on = [ "k" ]; exec = "arrow -1"; desc = "Move cursor up" ; }
+	{ on = [ "j" ]; exec = "arrow 1";  desc = "Move cursor down"; }
+
+	{ on = [ "K" ]; exec = "arrow -5"; desc = "Move cursor up 5 lines"; }
+	{ on = [ "J" ]; exec = "arrow 5";  desc = "Move cursor down 5 lines"; }
+{ on = [ "<S-Up>" ];   exec = "arrow -5"; desc = "Move cursor up 5 lines" ;}
+{ on = [ "<S-Down>" ]; exec = "arrow 5";  desc = "Move cursor down 5 lines" ;}
+
+{ on = [ "<C-u>" ]; exec = "arrow -50%";  desc = "Move cursor up half page" ;}
+{ on = [ "<C-d>" ]; exec = "arrow 50%";   desc = "Move cursor down half page" ;}
+{ on = [ "<C-b>" ]; exec = "arrow -100%"; desc = "Move cursor up one page" ;}
+{ on = [ "<C-f>" ]; exec = "arrow 100%";  desc = "Move cursor down one page" ;}
+
+{ on = [ "<C-PageUp>" ];   exec = "arrow -50%";  desc = "Move cursor up half page" ;}
+{ on = [ "<C-PageDown>" ]; exec = "arrow 50%";   desc = "Move cursor down half page" ;}
+{ on = [ "<PageUp>" ];     exec = "arrow -100%"; desc = "Move cursor up one page" ;}
+{ on = [ "<PageDown>" ];   exec = "arrow 100%";  desc = "Move cursor down one page" ;}
+
+{ on = [ "h" ]; exec = [ "leave" "escape --visual --select" ]; desc = "Go back to the parent directory" ;}
+{ on = [ "l" ]; exec = [ "enter" "escape --visual --select" ]; desc = "Enter the child directory" ;}
+
+{ on = [ "H" ]; exec = "back";    desc = "Go back to the previous directory" ;}
+{ on = [ "L" ]; exec = "forward"; desc = "Go forward to the next directory" ;}
+
+{ on = [ "<A-k>" ]; exec = "seek -5"; desc = "Seek up 5 units in the preview" ;}
+{ on = [ "<A-j>" ]; exec = "seek 5";  desc = "Seek down 5 units in the preview" ;}
+{ on = [ "<A-PageUp>" ];   exec = "seek -5"; desc = "Seek up 5 units in the preview" ;}
+{ on = [ "<A-PageDown>" ]; exec = "seek 5";  desc = "Seek down 5 units in the preview" ;}
+
+{ on = [ "<Up>" ];    exec = "arrow -1"; desc = "Move cursor up" ;}
+{ on = [ "<Down>" ];  exec = "arrow 1";  desc = "Move cursor down" ;}
+{ on = [ "<Left>" ];  exec = "leave";    desc = "Go back to the parent directory" ;}
+{ on = [ "<Right>" ]; exec = "enter";    desc = "Enter the child directory" ;}
+
+{ on = [ "g" "g" ]; exec = "arrow -99999999"; desc = "Move cursor to the top" ;}
+{ on = [ "G" ];      exec = "arrow 99999999";  desc = "Move cursor to the bottom" ;}
+
+# Selectino
+{ on = [ "<Space>" ]; exec = [ "select --state=none" "arrow 1" ]; desc = "Toggle the current selection state" ;}
+{ on = [ "v" ];       exec = "visual_mode";                        desc = "Enter visual mode (selection mode)" ;}
+{ on = [ "V" ];       exec = "visual_mode --unset";                desc = "Enter visual mode (unset mode)" ;}
+{ on = [ "<C-a>" ];   exec = "select_all --state=true";            desc = "Select all files" ;}
+{ on = [ "<C-r>" ];   exec = "select_all --state=none";            desc = "Inverse selection of all files" ;}
+
+# Operatino
+{ on = [ "o" ];         exec = "open";                                                 desc = "Open the selected files" ;}
+{ on = [ "O" ];         exec = "open --interactive";                                   desc = "Open the selected files interactively" ;}
+{ on = [ "<Enter>" ];   exec = "open";                                                 desc = "Open the selected files" ;}
+{ on = [ "<C-Enter>" ]; exec = "open --interactive";                                   desc = "Open the selected files interactively" ;}
+{ on = [ "y" ];         exec = [ "yank" "escape --visual --select" ];                 desc = "Copy the selected files" ;}
+{ on = [ "Y" ];         exec = [ "unyank" "escape --visual --select" ];               desc = "Cancel the yank status of files" ;}
+{ on = [ "x" ];         exec = [ "yank --cut" "escape --visual --select" ];           desc = "Cut the selected files" ;}
+{ on = [ "p" ];         exec = "paste";                                                desc = "Paste the files" ;}
+{ on = [ "P" ];         exec = "paste --force";                                        desc = "Paste the files (overwrite if the destination exists)" ;}
+{ on = [ "-" ];         exec = "link";                                                 desc = "Symlink the absolute path of files" ;}
+{ on = [ "_" ];         exec = "link --relative";                                      desc = "Symlink the relative path of files" ;}
+{ on = [ "d" ];         exec = [ "remove" "escape --visual --select" ];               desc = "Move the files to the trash" ;}
+{ on = [ "D" ];         exec = [ "remove --permanently" "escape --visual --select" ]; desc = "Permanently delete the files" ;}
+{ on = [ "a" ];         exec = "create";                                               desc = "Create a file or directory (ends with / for directories)" ;}
+{ on = [ "r" ];         exec = "rename --cursor=before_ext";                           desc = "Rename a file or directory" ;}
+{ on = [ ";" ];         exec = "shell";                                                desc = "Run a shell command" ;}
+{ on = [ ":" ];         exec = "shell --block";                                        desc = "Run a shell command (block the UI until the command finishes)" ;}
+{ on = [ "." ];         exec = "hidden toggle";                                        desc = "Toggle the visibility of hidden files" ;}
+{ on = [ "s" ];         exec = "search fd";                                            desc = "Search files by name using fd" ;}
+{ on = [ "S" ];         exec = "search rg";                                            desc = "Search files by content using ripgrep" ;}
+{ on = [ "<C-s>" ];     exec = "search none";                                          desc = "Cancel the ongoing search" ;}
+{ on = [ "z" ];         exec = "jump zoxide";                                          desc = "Jump to a directory using zoxide" ;}
+{ on = [ "Z" ];         exec = "jump fzf";                                             desc = "Jump to a directory; or reveal a file using fzf" ;}
+
+# Linemoed
+{ on = [ "m" "s" ]; exec = "linemode size";        desc = "Set linemode to size" ;}
+{ on = [ "m" "p" ]; exec = "linemode permissions"; desc = "Set linemode to permissions" ;}
+{ on = [ "m" "m" ]; exec = "linemode mtime";       desc = "Set linemode to mtime" ;}
+{ on = [ "m" "n" ]; exec = "linemode none";        desc = "Set linemode to none" ;}
+
+# Coyp
+{ on = [ "c" "c" ]; exec = "copy path";             desc = "Copy the absolute path" ;}
+{ on = [ "c" "d" ]; exec = "copy dirname";          desc = "Copy the path of the parent directory" ;}
+{ on = [ "c" "f" ]; exec = "copy filename";         desc = "Copy the name of the file" ;}
+{ on = [ "c" "n" ]; exec = "copy name_without_ext"; desc = "Copy the name of the file without the extension" ;}
+
+# Filtre
+{ on = [ "f" ]; exec = "filter --smart"; desc = "Filter the files" ;}
+
+# Fidn
+{ on = [ "/" ]; exec = "find --smart";            desc = "Find next file" ;}
+{ on = [ "?" ]; exec = "find --previous --smart"; desc = "Find previous file" ;}
+{ on = [ "n" ]; exec = "find_arrow";              desc = "Go to next found file" ;}
+{ on = [ "N" ]; exec = "find_arrow --previous";   desc = "Go to previous found file" ;}
+
+# Sortign
+{ on = [ ";" "m" ]; exec = "sort modified --dir-first";               desc = "Sort by modified time" ;}
+{ on = [ ";" "M" ]; exec = "sort modified --reverse --dir-first";     desc = "Sort by modified time (reverse)" ;}
+{ on = [ ";" "c" ]; exec = "sort created --dir-first";                desc = "Sort by created time" ;}
+{ on = [ ";" "C" ]; exec = "sort created --reverse --dir-first";      desc = "Sort by created time (reverse)" ;}
+{ on = [ ";" "e" ]; exec = "sort extension --dir-first";         	   desc = "Sort by extension" ;}
+{ on = [ ";" "E" ]; exec = "sort extension --reverse --dir-first";    desc = "Sort by extension (reverse)" ;}
+{ on = [ ";" "a" ]; exec = "sort alphabetical --dir-first";           desc = "Sort alphabetically" ;}
+{ on = [ ";" "A" ]; exec = "sort alphabetical --reverse --dir-first"; desc = "Sort alphabetically (reverse)" ;}
+{ on = [ ";" "n" ]; exec = "sort natural --dir-first";                desc = "Sort naturally" ;}
+{ on = [ ";" "N" ]; exec = "sort natural --reverse --dir-first";      desc = "Sort naturally (reverse)" ;}
+{ on = [ ";" "s" ]; exec = "sort size --dir-first";                   desc = "Sort by size" ;}
+{ on = [ ";" "S" ]; exec = "sort size --reverse --dir-first";         desc = "Sort by size (reverse)" ;}
+
+# Tasb
+{ on = [ "t" ]; exec = "tab_create --current"; desc = "Create a new tab using the current path" ;}
+
+{ on = [ "1" ]; exec = "tab_switch 0"; desc = "Switch to the first tab" ;}
+{ on = [ "2" ]; exec = "tab_switch 1"; desc = "Switch to the second tab" ;}
+{ on = [ "3" ]; exec = "tab_switch 2"; desc = "Switch to the third tab" ;}
+{ on = [ "4" ]; exec = "tab_switch 3"; desc = "Switch to the fourth tab" ;}
+{ on = [ "5" ]; exec = "tab_switch 4"; desc = "Switch to the fifth tab" ;}
+{ on = [ "6" ]; exec = "tab_switch 5"; desc = "Switch to the sixth tab" ;}
+{ on = [ "7" ]; exec = "tab_switch 6"; desc = "Switch to the seventh tab" ;}
+{ on = [ "8" ]; exec = "tab_switch 7"; desc = "Switch to the eighth tab" ;}
+{ on = [ "9" ]; exec = "tab_switch 8"; desc = "Switch to the ninth tab" ;}
+
+{ on = [ "[" ]; exec = "tab_switch -1 --relative"; desc = "Switch to the previous tab" ;}
+{ on = [ "]" ]; exec = "tab_switch 1 --relative";  desc = "Switch to the next tab" ;}
+
+{ on = [ "{" ]; exec = "tab_swap -1"; desc = "Swap the current tab with the previous tab" ;}
+{ on = [ "}" ]; exec = "tab_swap 1";  desc = "Swap the current tab with the next tab" ;}
+
+# Tassk
+{ on = [ "w" ]; exec = "tasks_show"; desc = "Show the tasks manager" ;}
+
+# Goot
+{ on = [ "g" "h" ];       exec = "cd ~";             desc = "Go to the home directory" ;}
+{ on = [ "g" "c" ];       exec = "cd ~/.config";     desc = "Go to the config directory" ;}
+{ on = [ "g" "d" ];       exec = "cd ~/Downloads";   desc = "Go to the downloads directory" ;}
+{ on = [ "g" "t" ];       exec = "cd /tmp";          desc = "Go to the temporary directory" ;}
+{ on = [ "g" "<Space>" ]; exec = "cd --interactive"; desc = "Go to a directory interactively" ;}
+
+# Hepl
+{ on = [ "~" ]; exec = "help"; desc = "Open help" ;}
+			];
 		};
 	};
 
@@ -352,7 +492,7 @@
 			padding = 15;
 			horizontal_padding = 10;
 			frame_width = 1;
-			font = "Iosevka Nerd Font 10";
+			font = "Iosevka Nerd Font 12";
 			line_height = "1.2";
 			sort = true;
 			markup = "yes";
@@ -419,9 +559,11 @@
 	  enable = true;
 		keybindings = {
 			"super + Return" = "wezterm";		# launch terminal
+			"super + shift + Return" = "wezterm start -e yazi";		# launch terminal
 			"super + d" = "rofi -show drun -theme ~/.config/rofi/cyberpunk/launcher.rasi";
-			"super + shift + q" = "./.config/rofi/cyberpunk/powermenu.sh";
-			"Print" = "maim ~/Pictures/screenshots/maim_$(date +%d%m%Y_%H%M%S).png && dunstify -a 'Scrot' 'Screenshot saved.' -i '~/Pictures/Scrot/$1' -t 2000";
+			"super + e" = "./.config/rofi/cyberpunk/bin/emoji.sh";
+			"super + shift + q" = "./.config/rofi/cyberpunk/bin/powermenu.sh";
+			"Print" = "./.config/rofi/cyberpunki/bin/screenshot.sh";
 			"super + Escape" = "pkill -USR1 -x sxhkd";
 			# close and kill
 			"super + q" = "bspc node -c";
